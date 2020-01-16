@@ -1,0 +1,53 @@
+﻿@model IEnumerable<WebApplication1.Models.Company>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="col-12 col-md-4 d-flex align-items-center py-2" style="display:flex">
+    <h2>Companies</h2>   
+</div>
+<br />
+<a href="@Url.Action("Create", "Company")">
+    <button class="btn btn-rounded btn-outline-primary"
+            data-toggle="modal" style="background-color:#57a0d3;">
+        <i class="fa fa-plus pr-4"></i>
+        <big>+</big> Add Company
+    </button>
+</a>
+<br />
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(company => company.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(company => company.Name)
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var company in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => company.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => company.Name)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" onclick="location.href='@Url.Action("Edit", "Company", new { id = company.Id })'">
+                        <span class="glyphicon glyphicon-edit"></span> Edit
+                    </button> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

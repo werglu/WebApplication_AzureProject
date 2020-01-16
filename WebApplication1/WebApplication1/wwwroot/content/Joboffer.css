@@ -1,0 +1,41 @@
+﻿
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.btn-rounded {
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.search-input input {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding-left: 20px;
+}
+
+.search-input button {
+    width: 60px;
+    text-align: center;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    font-size: 20px;
+    line-height: 1;
+    padding-left: 6px;
+}
+
+.table-title {
+    min-height: 60px;
+}
+
+h2, h3 {
+    font-weight: 700;
+}
+
+label {
+    margin-bottom: 2px;
+    font-weight: bold;
+    font-size: 14px;
+}
+

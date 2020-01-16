@@ -1,0 +1,188 @@
+﻿@model IEnumerable<WebApplication1.Models.JobOffer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="col-12 col-md-4 d-flex align-items-center py-2" style="display:flex">
+    <h1>Job Offers</h1>
+    <div>
+        <span class="badge badge-pill badge-primary align-center" id="records-count">
+        </span>
+    </div>
+</div>
+<br />
+<br />
+
+<a href="@Url.Action("Create", "JobOffers")">
+    <button class="btn btn-rounded btn-outline-primary"
+            data-toggle="modal" style="background-color:#57a0d3;">
+        <i class="fa fa-plus pr-4"></i>
+        <big>+</big> Add Job Offer
+    </button>
+</a>
+
+<div class="col-md-4">
+    <div class="input-group search-input"
+         style="border-radius: 20px;display: inline-flex">
+        <input name="search"
+               type="text"
+               class="form-control"
+               placeholder="Search by job title.."
+               aria-label="Search by job title"
+               aria-describedby="button-search"
+               id="searchText" />
+        <div class="input-group-append">
+            <button id="button-search" class="btn btn-primary" onclick="onSearch()" style="padding-left:1px">
+                <small> Search</small>
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Job Title
+            </th>
+            <th>
+                Salary
+            </th>
+            <th>
+                Location
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="body_offers">
+        @*@foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id"><strong>@Html.DisplayFor(modelItem => item.JobTitle)</strong></a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Salary)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-sm" onclick="location.href='@Url.Action("Edit", "JobOffers", new { id = item.Id })'">
+                            <span class="glyphicon glyphicon-edit"></span> Edit
+                        </button>
+
+                    </td>
+                </tr>
+            }*@
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination justify-content-end" id="main_navigation"></ul>
+</nav>
+
+<select class="custom-select" onchange="onNumberChange()" id="page_size">
+    <option selected="" value="5">5 offers per page</option>
+    <option value="10">10 offers per page</option>
+    <option value="15">15 offers per page</option>
+</select>
+
+@section Scripts {
+    <script type='text/javascript'>
+        var pageSize = 5;
+        var pageNo = 1;
+        var numberOfPages = -1;
+        var searchString = "_"
+
+        $(document).ready(recreate);
+        function recreate() {
+            var body_offers = document.getElementById('body_offers');
+            while (body_offers.firstChild) {
+                body_offers.removeChild(body_offers.firstChild);
+            }
+            var api = '/api/offers/getoffers/search=' + searchString + '&pageNo=' + pageNo + '&pageSize=' + pageSize
+            $.ajax({
+                url: api,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    numberOfPages = data.totalPage;
+                    $.each(data.offers, function (key, item) {
+                        var tr = $('<tr>');
+
+                        var td2 = $('<td>');
+                        var a2 = $('<a>', { href: formatDetailsLink(item), class: "text-primary", text: item.jobTitle });
+                        var td3 = $('<td>', { text: item.salary });
+                        var td4 = $('<td>', { text: item.location });
+                        var td6 = $('<td>');
+                        var a6 = $('<a>', { href: formatEditLink(item), class: "text-primary" });
+                        var i6 = $('<button>', { class: "btn btn-default btn-sm", title: "Edit" });
+                        var s6 = $('<span>', { class: "glyphicon glyphicon-edit", text: "Edit" });
+
+                        a2.appendTo(td2);
+                        td2.appendTo(tr);
+                        td3.appendTo(tr);
+                        td4.appendTo(tr);
+                        i6.appendTo(a6);
+                        a6.appendTo(td6);
+                        s6.appendTo(i6);
+                        td6.appendTo(tr);
+                        tr.appendTo('#body_offers')
+                    });
+                    recreateNavigation();
+                    document.getElementById("records-count").textContent = data.totalRecord;
+                }
+            });
+        }
+        function recreateNavigation() {
+            var navigation = document.getElementById('main_navigation');
+            while (navigation.firstChild) {
+                navigation.removeChild(navigation.firstChild);
+            }
+            var liPrev = pageNo !== 1 ? $('<li>', { class: "page-item", onclick: "onPageChange(" + (pageNo - 1) + ")" }) : $('<li>', { class: "page-item disabled", onclick: "onPageChange(" + (pageNo - 1) + ")" });
+            $('<a>', { class: "page-link", text: "Previous" }).appendTo(liPrev);
+            liPrev.appendTo(navigation);
+            for (var i = 1; i < pageNo; i++) {
+                var li = $('<li>', { class: "page-item", onclick: "onPageChange(" + i + ")" });
+                $('<a>', { class: "page-link", text: i.toString() }).appendTo(li);
+                li.appendTo(navigation);
+            }
+            var li = $('<li>', { class: "page-item active", onclick: "onPageChange(" + pageNo + ")" });
+            $('<a>', { class: "page-link", text: pageNo.toString() }).appendTo(li);
+            li.appendTo(navigation);
+            for (var i = pageNo + 1; i <= numberOfPages; i++) {
+                var li = $('<li>', { class: "page-item", onclick: "onPageChange(" + i + ")" });
+                $('<a>', { class: "page-link", text: i.toString() }).appendTo(li);
+                li.appendTo(navigation);
+            }
+            var liNext = pageNo !== numberOfPages ? $('<li>', { class: "page-item", onclick: "onPageChange(" + (pageNo + 1) + ")" }) : $('<li>', { class: "page-item disabled", onclick: "onPageChange(" + (pageNo + 1) + ")" });
+            $('<a>', { class: "page-link", text: "Next" }).appendTo(liNext);
+            liNext.appendTo(navigation);
+        }
+        function formatEditLink(item) {
+            return "/JobOffers/Edit?Id=" + item.id
+        }
+        function formatDetailsLink(item) {
+            return "/JobOffers/Details?Id=" + item.id
+        }
+        function onSearch() {
+            searchString = document.getElementById("searchText").value;
+            if (searchString === "") searchString = "_";
+            recreate();
+        }
+        function onPageChange(newPageNo) {
+            if (newPageNo < 1 || newPageNo > numberOfPages) return;
+            pageNo = newPageNo;
+            recreate();
+        }
+        function onNumberChange() {
+            pageSize = document.getElementById("page_size").value
+            recreate();
+        }
+    </script>
+}

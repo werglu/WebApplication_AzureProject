@@ -1,0 +1,63 @@
+﻿@model WebApplication1.Models.Company
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Company</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="createForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" id="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input value="Create" class="btn btn-primary" id="validate" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" id="BackBtn">Back to List </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type='text/javascript'>
+    $('#validate').click(function () {
+    $('#createForm').validate();
+
+        if ($('#createForm').valid()) {
+        sendAjax();
+        }
+    });
+
+        function sendAjax() {
+            //https://webjobapplication2.azurewebsites.net
+            var url = "https://localhost:44316/";
+            //var url = "https://webjobapplication2.azurewebsites.net";
+
+            var _name = document.getElementById("Name").value;
+            var urlString = url + "/api/offers/getoffers/name=" + _name;
+                $.ajax({
+                url: urlString,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                })
+                .done(function (result) {
+                if (result == "OK") {
+                window.location.replace(url + "/Company");
+                }
+
+                });
+                }
+    </script>
+}

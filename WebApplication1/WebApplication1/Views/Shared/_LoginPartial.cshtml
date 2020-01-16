@@ -1,0 +1,38 @@
+﻿@using System.Security.Principal
+@using Microsoft.AspNetCore.Authentication.AzureADB2C.UI
+@using Microsoft.Extensions.Options
+@inject IOptionsMonitor<AzureADB2COptions> AzureADB2COptions
+
+@{
+    var options = AzureADB2COptions.Get(AzureADB2CDefaults.AuthenticationScheme);
+}
+
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    @if (!string.IsNullOrEmpty(options.EditProfilePolicyId))
+    {
+        <li>
+            <a style="color:darkblue" asp-area="AzureADB2C" asp-controller="Account" asp-action="EditProfile">
+
+            </a>
+        </li>
+    }
+    else
+    {
+
+        <li> <a style="color:darkblue"> Hello @User.Claims.Where(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").First().Value !</a></li>
+
+    }
+
+    <li> <a style="color:rebeccapurple" asp-area="AzureADB2C" asp-controller="Account" asp-action="SignOut">Sign out</a></li>
+
+}
+else
+{
+
+    <li>    <a style="color:rebeccapurple" asp-area="AzureADB2C" asp-controller="Account" asp-action="SignIn">Sign in</a></li>
+
+}
+

@@ -1,0 +1,135 @@
+﻿@model WebApplication1.Models.JobOffer
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>JobOffer</h4>
+<div>
+    <span class="text-danger">@ViewBag.Message</span>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="form">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="JobTitle" class="control-label"></label>
+                <input asp-for="JobTitle" class="form-control" data-bind='value: firstName' id="JobTitle" required="required" /></>
+                <span asp-validation-for="JobTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salary" class="control-label"></label>
+                <input asp-for="Salary" class="form-control" data-bind='value: lastName' id="Salary" />
+
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" data-bind='value: location' id="Localization" required="required" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" data-bind='value: description' id="Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger" id="Description-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValidUntil" class="control-label"></label>
+                <input asp-for="ValidUntil" class="form-control" data-bind='value: date' id="ValidUntil" />
+                <span asp-validation-for="ValidUntil" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" id="Create" onclick="validate()" />
+            </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4" style="margin-left:60px">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Job Title: </label>
+                <span data-bind='text: firstName'></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Salary: </label>
+                <span data-bind='text: lastName'></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Location: </label>
+                <span data-bind='text: location'></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Description: </label>
+                <span data-bind='text: description'></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Valid until: </label>
+                <span data-bind='text: date'></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type='text/javascript'>
+        var ViewModel = function (first, last, location, description, date) {
+            this.firstName = ko.observable(first);
+            this.lastName = ko.observable(last);
+            this.location = ko.observable(location);
+            this.description = ko.observable(description);
+            this.date = ko.observable(date);
+
+            this.fullName = ko.computed(function () {
+                // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+                return this.firstName() + " " + this.lastName();
+            }, this);
+        };
+
+        ko.applyBindings(new ViewModel("", "", "", "", "")); // This makes Knockout get to work
+    </script>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.0.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery.validate.min.js"></script>
+    <script type="text/javascript" language="javascript">
+        $("#form").validate({
+            rules: {
+                Location: "required"
+            },
+            messages: {
+                Location: "Job title is required"
+            },
+        }
+        );
+        function validate() {
+            /*var email = $("#emailid").val();
+            var emailreg = new regexp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            var valid = emailreg.test(email);
+            if (email == "") {
+                $("#div1").text("please enter an email");
+            }
+            else if (!valid) {
+                $("#div1").text(" email is not valid");
+            }
+
+            var Phonenumber = $("#Phone").val();
+            var filter = /^[0-9-+]+$/;
+            if (!(filter.test(Phonenumber))) {
+                $("#div2").text("Please enter valid Phone Number");
+            }*/
+        }
+    </script>
+}
+
