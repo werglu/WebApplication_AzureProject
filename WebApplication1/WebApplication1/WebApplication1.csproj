@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.1.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
     <PackageReference Include="bootstrap" Version="4.3.1" />
     <PackageReference Include="FluentValidation.MVC4" Version="5.1.0" />
     <PackageReference Include="FontAwesome" Version="4.7.0" />
